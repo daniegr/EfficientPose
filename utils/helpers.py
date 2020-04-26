@@ -5,9 +5,9 @@ from tensorflow.keras.initializers import Initializer
 from torch.nn import ConvTranspose2d, init
 from torch import Tensor
 import numpy as np
+import math
 from skimage.transform import rescale
 from skimage.util import pad as padding
-from skimage.feature import peak_local_max
 from scipy.ndimage.filters import gaussian_filter
 
 class Swish(Activation):
@@ -251,7 +251,7 @@ def preprocess(batch, resolution):
     
     return batch
     
-def extract_coordinates(frame_output, frame_height, frame_width):
+def extract_coordinates(frame_output, frame_height, frame_width, real_time=False):
     """
     Extract coordinates from supplied confidence maps.
     
@@ -262,6 +262,8 @@ def extract_coordinates(frame_output, frame_height, frame_width):
             Height of relevant frame
         frame_width: int
             Width of relevant frame
+        real-time: boolean
+            Defines if processing is performed in real-time
            
     Returns:
         List of predicted coordinates for all c body parts in the frame the outputs are computed from.
@@ -269,6 +271,9 @@ def extract_coordinates(frame_output, frame_height, frame_width):
     
     # Define body parts
     body_parts = ['head_top', 'upper_neck', 'right_shoulder', 'right_elbow', 'right_wrist', 'thorax', 'left_shoulder', 'left_elbow', 'left_wrist', 'pelvis', 'right_hip', 'right_knee', 'right_ankle', 'left_hip', 'left_knee', 'left_ankle']
+    
+    # Fetch output resolution 
+    output_height, output_width = frame_output.shape[0:2]
     
     # Initialize coordinates
     frame_coords = []
@@ -278,26 +283,28 @@ def extract_coordinates(frame_output, frame_height, frame_width):
 
         # Find peak point
         conf = frame_output[...,i]
-        conf = gaussian_filter(conf, sigma=1.) 
-        local_max = peak_local_max(conf, num_peaks=1, threshold_abs=0.0001, exclude_border=False)
-        (peak_y, peak_x) = local_max[0] if local_max.size else (-1, -1)
+        if not real_time:
+            conf = gaussian_filter(conf, sigma=1.) 
+        max_index = np.argmax(conf)
+        peak_y = float(math.floor(max_index / output_width))
+        peak_x = max_index % output_width
         peak_x += 0.5
         peak_y += 0.5
 
         # Normalize coordinates
-        peak_x /= conf.shape[1]
-        peak_y /= conf.shape[0]
+        peak_x /= output_width
+        peak_y /= output_height
 
         # Convert to original aspect ratio 
         if frame_width > frame_height:
             norm_padding = (frame_width - frame_height) / (2 * frame_width)  
             peak_y = (peak_y - norm_padding) / (1.0 - (2 * norm_padding))
-            peak_y = -0.5 / conf.shape[0] if peak_y < 0.0 else peak_y
+            peak_y = -0.5 / output_height if peak_y < 0.0 else peak_y
             peak_y = 1.0 if peak_y > 1.0 else peak_y
         elif frame_width < frame_height:
             norm_padding = (frame_height - frame_width) / (2 * frame_height)  
             peak_x = (peak_x - norm_padding) / (1.0 - (2 * norm_padding))
-            peak_x = -0.5 / conf.shape[1] if peak_x < 0.0 else peak_x
+            peak_x = -0.5 / output_width if peak_x < 0.0 else peak_x
             peak_x = 1.0 if peak_x > 1.0 else peak_x
 
         frame_coords.append((body_parts[i], peak_x, peak_y))
@@ -406,10 +413,10 @@ def display_camera(cv2, frame, coordinates, frame_height, frame_width):
         b_coordinate_x = int(b_coordinates[1] * frame_width)
         b_coordinate_y = int(b_coordinates[2] * frame_height)
         if not (a_coordinate_x < 0 or a_coordinate_y < 0 or b_coordinate_x < 0 or b_coordinate_y < 0): 
-            if a == 0:
-                cv2.rectangle(frame, (a_coordinate_x - 20, a_coordinate_y), (b_coordinate_x + 20, b_coordinate_y), color=body_part_colors[a], thickness=2)
-            else:
-                cv2.line(frame, (a_coordinate_x, a_coordinate_y), (b_coordinate_x, b_coordinate_y), color=body_part_colors[a], thickness=2)
+            #if a == 0:
+            #    cv2.rectangle(frame, (a_coordinate_x - 20, a_coordinate_y), (b_coordinate_x + 20, b_coordinate_y), color=body_part_colors[a], thickness=2)
+            #else:
+            cv2.line(frame, (a_coordinate_x, a_coordinate_y), (b_coordinate_x, b_coordinate_y), color=body_part_colors[a], thickness=2)
 
             if a in remaining:
                 cv2.circle(frame, (a_coordinate_x, a_coordinate_y), radius=3, color=body_part_colors[a], thickness=2)
