@@ -51,10 +51,12 @@ def get_model(framework, model_variant):
     # PyTorch
     elif framework in ['pytorch', 'torch']:
         from imp import load_source
-        from torch import load
+        from torch import load, quantization, backends
         MainModel = load_source('MainModel', join('models', 'pytorch', 'EfficientPose{0}.py'.format(model_variant.upper())))
         model = load(join('models', 'pytorch', 'EfficientPose{0}'.format(model_variant.upper())))
         model.eval()
+        qconfig = quantization.get_default_qconfig('qnnpack')
+        backends.quantized.engine = 'qnnpack'
             
     return model, {'rt': 224, 'i': 256, 'ii': 368, 'iii': 480, 'iv': 600}[model_variant]
 
@@ -142,7 +144,7 @@ def analyze_camera(model, framework, resolution):
         batch_outputs = infer(batch, model, framework)
 
         # Extract coordinates for frame
-        frame_coordinates = helpers.extract_coordinates(batch_outputs[0,...], frame_height, frame_width)
+        frame_coordinates = helpers.extract_coordinates(batch_outputs[0,...], frame_height, frame_width, real_time=True)
         coordinates += [frame_coordinates]
         
         # Draw and display predictions
@@ -539,14 +541,14 @@ if __name__== '__main__':
     # Define default choices
     file_path = None
     model_name = 'RT'
-    framework_name = 'TensorFlow'
+    framework_name = 'TFLite'
     visualize = False
     store = False
 
     # Set custom choices
     for current_argument, current_value in arguments:
         if current_argument in ('-p', '--path'):
-            file_path = current_value
+            file_path = current_value if len(current_value) > 0 else None
         elif current_argument in ('-m', '--model'):
             model_name = current_value
         elif current_argument in ('-f', '--framework'):
