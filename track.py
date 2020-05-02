@@ -540,7 +540,7 @@ if __name__== '__main__':
     
     # Define default choices
     file_path = None
-    model_name = 'RT'
+    model_name = 'I'
     framework_name = 'TFLite'
     visualize = False
     store = False

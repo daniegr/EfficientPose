@@ -28,7 +28,7 @@ You are provided with these options (which go seamlessly hand in hand):
 
 - **Model (*--model*, *-m*)**: Explore choice of model (EfficientPose RT-IV) depending on your computational resources and precision requirements. For more details, we refer to the [performance comparison](#performance). For ex: ```python track.py --model=IV```
 
-- **Framework (*--framework*, *-f*)**: Have specific preference of deep learning framework? We provide models in [Keras](https://keras.io/), [TensorFlow](https://www.tensorflow.org/), [TFLite](https://www.tensorflow.org/lite) and [PyTorch](https://pytorch.org/). In general, TensorFlow is recommended for maximal precision with low computational overhead, while TFLite (and PyTorch in case of ARM CPUs with [QNNPACK](https://engineering.fb.com/ml-applications/qnnpack/)) supports use in resource-constrained applications. For ex: ```python track.py --framework=tensorflow```
+- **Framework (*--framework*, *-f*)**: Have specific preference of deep learning framework? We provide models in [Keras](https://keras.io/), [TensorFlow](https://www.tensorflow.org/), [TFLite](https://www.tensorflow.org/lite) and [PyTorch](https://pytorch.org/). In general, TensorFlow is recommended for maximal precision with low computational overhead on GPU, while TFLite (and PyTorch in case of ARM CPUs with [QNNPACK](https://engineering.fb.com/ml-applications/qnnpack/)) supports use in resource-constrained applications. For ex: ```python track.py --framework=tensorflow```
 
 - **Visualize predictions (*--visualize*, *-v*)**: Visualizes the keypoint predictions on top of the image/video you provided and stores the file in the folder of the original file. For ex: ```python track.py --path=utils/MPII.jpg --visualize```
 

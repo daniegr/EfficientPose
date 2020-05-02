@@ -272,6 +272,9 @@ def extract_coordinates(frame_output, frame_height, frame_width, real_time=False
     # Define body parts
     body_parts = ['head_top', 'upper_neck', 'right_shoulder', 'right_elbow', 'right_wrist', 'thorax', 'left_shoulder', 'left_elbow', 'left_wrist', 'pelvis', 'right_hip', 'right_knee', 'right_ankle', 'left_hip', 'left_knee', 'left_ankle']
     
+    # Define confidence level
+    confidence = 0.3
+    
     # Fetch output resolution 
     output_height, output_width = frame_output.shape[0:2]
     
@@ -288,8 +291,14 @@ def extract_coordinates(frame_output, frame_height, frame_width, real_time=False
         max_index = np.argmax(conf)
         peak_y = float(math.floor(max_index / output_width))
         peak_x = max_index % output_width
-        peak_x += 0.5
-        peak_y += 0.5
+        
+        # Verify confidence
+        if real_time and conf[int(peak_y),int(peak_x)] < confidence:
+            peak_x = -0.5
+            peak_y = -0.5
+        else:
+            peak_x += 0.5
+            peak_y += 0.5
 
         # Normalize coordinates
         peak_x /= output_width
@@ -413,9 +422,6 @@ def display_camera(cv2, frame, coordinates, frame_height, frame_width):
         b_coordinate_x = int(b_coordinates[1] * frame_width)
         b_coordinate_y = int(b_coordinates[2] * frame_height)
         if not (a_coordinate_x < 0 or a_coordinate_y < 0 or b_coordinate_x < 0 or b_coordinate_y < 0): 
-            #if a == 0:
-            #    cv2.rectangle(frame, (a_coordinate_x - 20, a_coordinate_y), (b_coordinate_x + 20, b_coordinate_y), color=body_part_colors[a], thickness=2)
-            #else:
             cv2.line(frame, (a_coordinate_x, a_coordinate_y), (b_coordinate_x, b_coordinate_y), color=body_part_colors[a], thickness=2)
 
             if a in remaining:
