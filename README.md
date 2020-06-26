@@ -1,7 +1,7 @@
 # EfficientPose
 ![](utils/EfficientPose.gif)
 
-**Publicly accessible scalable single-person pose estimation as introduced in** [**"EfficientPose: Scalable single-person pose estimation"**](https://arxiv.org/abs/****.*****)**. We provide a simple intuitive interface for high-precision movement extraction from 2D images, videos, or directly from your webcamera.** 
+**Publicly accessible scalable single-person pose estimation as introduced in** [**"EfficientPose: Scalable single-person pose estimation"**](https://arxiv.org/abs/2004.12186)**. We provide a simple intuitive interface for high-precision movement extraction from 2D images, videos, or directly from your webcamera.** 
 
 **NOTE:** *All data remains safely at your computer during use.*
 
