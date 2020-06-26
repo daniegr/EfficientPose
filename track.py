@@ -558,7 +558,7 @@ if __name__== '__main__':
         elif current_argument in ('-s', '--store'):
             store = True
     print('\n##########################################################################################################')
-    print('The program will attempt to analyze {0} using the "{1}" framework with model "{2}", and the user did{3} like to store the predictions and wanted{4} to visualize the result.'.format('"' + file_path + '""' if file_path is not None else 'the camera', framework_name, model_name, '' if store else ' not', '' if visualize or file_path is None else ' not'))
+    print('The program will attempt to analyze {0} using the "{1}" framework with model "{2}", and the user did{3} like to store the predictions and wanted{4} to visualize the result.'.format('"' + file_path + '"' if file_path is not None else 'the camera', framework_name, model_name, '' if store else ' not', '' if visualize or file_path is None else ' not'))
     print('##########################################################################################################\n')
         
     main(file_path=file_path, model_name=model_name, framework_name=framework_name, visualize=visualize, store=store)
