@@ -57,3 +57,15 @@ To achieve the optimal precision provided by the software, please adhere to the 
 ## Acknowledgement
 
 The work is conducted as a collaboration between the [Department of Neuromedicine and Movement Science](https://www.ntnu.edu/inb) and the [Department of Computer Science](https://www.ntnu.edu/idi) at the [Norwegian University of Science and Technology](https://www.ntnu.edu/). State-of-the-art computational infrastructure is provided by the [Norwegian Open AI Lab](https://www.ntnu.edu/ailab). We are also greatful to Data Scientist [Pavel Yakubovskiy](https://github.com/qubvel/efficientnet) for his contribution in making EfficientNet models more widely available; this provided a great starting point for our research.
+
+## Citation
+
+If you enjoyed this project or found the work helpful in your research, please cite the following:
+```
+@article{groos2020efficientpose,
+  title={EfficientPose: Scalable single-person pose estimation},
+  author={Groos, Daniel and Ramampiaro, Heri and Ihlen, Espen},
+  journal={arXiv preprint arXiv:2004.12186},
+  year={2020}
+}
+```
