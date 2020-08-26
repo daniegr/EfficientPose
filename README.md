@@ -56,7 +56,7 @@ To achieve the optimal precision provided by the software, please adhere to the 
 
 ## Acknowledgement
 
-The work is conducted as a collaboration between the [Department of Neuromedicine and Movement Science](https://www.ntnu.edu/inb) and the [Department of Computer Science](https://www.ntnu.edu/idi) at the [Norwegian University of Science and Technology](https://www.ntnu.edu/). State-of-the-art computational infrastructure is provided by the [Norwegian Open AI Lab](https://www.ntnu.edu/ailab). We are also greatful to Data Scientist [Pavel Yakubovskiy](https://github.com/qubvel/efficientnet) for his contribution in making EfficientNet models more widely available; this provided a great starting point for our research.
+The work is conducted as a collaboration between the [Department of Neuromedicine and Movement Science](https://www.ntnu.edu/inb) and the [Department of Computer Science](https://www.ntnu.edu/idi) at the [Norwegian University of Science and Technology](https://www.ntnu.edu/). State-of-the-art computational infrastructure is provided by the [Norwegian Open AI Lab](https://www.ntnu.edu/ailab). We are also grateful to Data Scientist [Pavel Yakubovskiy](https://github.com/qubvel/efficientnet) for his contribution in making EfficientNet models more widely available; this provided a great starting point for our research.
 
 ## Citation
 
