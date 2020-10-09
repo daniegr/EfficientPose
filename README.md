@@ -47,6 +47,8 @@ You are provided with these options (which go seamlessly hand in hand):
 
 *All models were trained with similar optimization procedure and the precision was evaluated on the single-person [MPII benchmark](http://human-pose.mpi-inf.mpg.de/) in terms of PCK<sub>h</sub>@50 and PCK<sub>h</sub>@10. Due to restriction in number of attempts on MPII test, only EfficientPose RT and IV, and the baseline method OpenPose were officially evaluated.*
 
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/efficientpose-scalable-single-person-pose/pose-estimation-on-mpii-human-pose)](https://paperswithcode.com/sota/pose-estimation-on-mpii-human-pose?p=efficientpose-scalable-single-person-pose)
+
 ## Guidelines
 
 To achieve the optimal precision provided by the software, please adhere to the following three principles:
@@ -54,7 +56,7 @@ To achieve the optimal precision provided by the software, please adhere to the 
 2. *Ensure that the full body of the person is clearly visible, and near the centre of the image/video frame*
 3. *Avoid that the subject is occluded by other objects, even partial occlusion is discouraged*
 
-## Acknowledgement
+## Acknowledgment
 
 The work is conducted as a collaboration between the [Department of Neuromedicine and Movement Science](https://www.ntnu.edu/inb) and the [Department of Computer Science](https://www.ntnu.edu/idi) at the [Norwegian University of Science and Technology](https://www.ntnu.edu/). State-of-the-art computational infrastructure is provided by the [Norwegian Open AI Lab](https://www.ntnu.edu/ailab). We are also grateful to Data Scientist [Pavel Yakubovskiy](https://github.com/qubvel/efficientnet) for his contribution in making EfficientNet models more widely available; this provided a great starting point for our research.
 
