@@ -28,7 +28,7 @@ You are provided with these options (which go seamlessly hand in hand):
 
 - **Model (*--model*, *-m*)**: Explore choice of model (EfficientPose RT-IV) depending on your computational resources and precision requirements. For more details, we refer to the [performance comparison](#evidence). For ex: ```python track.py --model=IV```
 
-- **Framework (*--framework*, *-f*)**: Have specific preference of deep learning framework? We provide models in [Keras](https://keras.io/), [TensorFlow](https://www.tensorflow.org/), [TFLite](https://www.tensorflow.org/lite) and [PyTorch](https://pytorch.org/). In general, TensorFlow is recommended for maximal precision with low computational overhead on GPU, while TFLite (and PyTorch in case of ARM CPUs with [QNNPACK](https://engineering.fb.com/ml-applications/qnnpack/)) supports use in resource-constrained applications. For ex: ```python track.py --framework=tensorflow```
+- **Framework (*--framework*, *-f*)**: Have specific preference of deep learning framework? We provide models in [Keras](https://keras.io/), [TensorFlow](https://www.tensorflow.org/), [TFLite](https://www.tensorflow.org/lite) and [PyTorch](https://pytorch.org/). In general, TensorFlow is recommended for maximal precision with low computational overhead on GPU, while TFLite (and PyTorch in case of ARM CPUs with [QNNPACK](https://engineering.fb.com/ml-applications/qnnpack/)) supports use in resource-constrained applications, such as smartphones. For ex: ```python track.py --framework=tensorflow```
 
 - **Visualize predictions (*--visualize*, *-v*)**: Visualizes the keypoint predictions on top of the image/video you provided and stores the file in the folder of the original file. For ex: ```python track.py --path=utils/MPII.jpg --visualize```
 
@@ -43,6 +43,9 @@ You are provided with these options (which go seamlessly hand in hand):
 | EfficientPose II | 368x368 | 1.73M | 7.70G | 88.2 | 30.2 | - | - |
 | EfficientPose III | 480x480 | 3.23M | 23.35G | 89.5 | 30.9 | - | -  |
 | EfficientPose IV | 600x600 | 6.56M | 72.89G | **89.8** | **35.6** | **91.2** | **34.0** |
+| EfficientPose RT Lite | 224x224 | 0.40M  | 0.86G | 80.6 | 23.1 | - | - | 
+| EfficientPose I Lite | 256x256 | 0.59M | 1.54G | 83.7 | 27.7 | - | - |
+| EfficientPose II Lite | 368x368 | 1.46M | 7.25G |  |  | - | - |
 | OpenPose [(Cao et al.)](https://arxiv.org/abs/1812.08008) | 368x368 | 25.94M | 160.36G | 87.6 | 22.8 | 88.8 | 22.5 |
 
 *All models were trained with similar optimization procedure and the precision was evaluated on the single-person [MPII benchmark](http://human-pose.mpi-inf.mpg.de/) in terms of PCK<sub>h</sub>@50 and PCK<sub>h</sub>@10. Due to restriction in number of attempts on MPII test, only EfficientPose RT and IV, and the baseline method OpenPose were officially evaluated.*
@@ -56,4 +59,4 @@ To achieve the optimal precision provided by the software, please adhere to the 
 
 ## Acknowledgement
 
-The work is conducted as a collaboration between the [Department of Neuromedicine and Movement Science](https://www.ntnu.edu/inb) and the [Department of Computer Science](https://www.ntnu.edu/idi) at the [Norwegian University of Science and Technology](https://www.ntnu.edu/). State-of-the-art computational infrastructure is provided by the [Norwegian Open AI Lab](https://www.ntnu.edu/ailab). We are also greatful to Data Scientist [Pavel Yakubovskiy](https://github.com/qubvel/efficientnet) for his contribution in making EfficientNet models more widely available; this provided a great starting point for our research.
+The work is conducted as a collaboration between the [Department of Neuromedicine and Movement Science](https://www.ntnu.edu/inb) and the [Department of Computer Science](https://www.ntnu.edu/idi) at the [Norwegian University of Science and Technology](https://www.ntnu.edu/). State-of-the-art computational infrastructure is provided by the [Norwegian Open AI Lab](https://www.ntnu.edu/ailab). We are also greatful to [TensorFlow](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet) and Data Scientist [Pavel Yakubovskiy](https://github.com/qubvel/efficientnet) for making EfficientNet and EfficientNet Lite models more widely available; this provided a great starting point for our research.
