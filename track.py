@@ -15,7 +15,7 @@ def get_model(framework, model_variant):
         framework: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         model_variant: string
-            EfficientPose model to utilize (RT, I, II, III or IV)
+            EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
             
     Returns:
         Initialized EfficientPose model and corresponding resolution.
@@ -52,15 +52,21 @@ def get_model(framework, model_variant):
     elif framework in ['pytorch', 'torch']:
         from imp import load_source
         from torch import load, quantization, backends
-        MainModel = load_source('MainModel', join('models', 'pytorch', 'EfficientPose{0}.py'.format(model_variant.upper())))
+        try:
+            MainModel = load_source('MainModel', join('models', 'pytorch', 'EfficientPose{0}.py'.format(model_variant.upper())))
+        except:
+            print('\n##########################################################################################################')
+            print('Desired model "EfficientPose{0}Lite" not available in PyTorch. Please select among "RT", "I", "II", "III" or "IV".'.format(model_variant.split('lite')[0].upper()))
+            print('##########################################################################################################\n')
+            return False, False
         model = load(join('models', 'pytorch', 'EfficientPose{0}'.format(model_variant.upper())))
         model.eval()
         qconfig = quantization.get_default_qconfig('qnnpack')
         backends.quantized.engine = 'qnnpack'
             
-    return model, {'rt': 224, 'i': 256, 'ii': 368, 'iii': 480, 'iv': 600}[model_variant]
+    return model, {'rt': 224, 'i': 256, 'ii': 368, 'iii': 480, 'iv': 600, 'rtlite': 224, 'ilite': 256, 'iilite': 368}[model_variant]
 
-def infer(batch, model, framework):
+def infer(batch, model, lite, framework):
     """
     Perform inference on supplied image batch.
     
@@ -68,7 +74,9 @@ def infer(batch, model, framework):
         batch: ndarray
             Stack of preprocessed images
         model: deep learning model
-            Initialized EfficientPose model to utilize (RT, I, II, III or IV)
+            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
+        lite: boolean
+            Defines if EfficientPose Lite model is used
         framework: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         
@@ -78,12 +86,18 @@ def infer(batch, model, framework):
     
     # Keras
     if framework in ['keras', 'k']:
-        batch_outputs = model.predict(batch)[-1]
+        if lite:
+            batch_outputs = model.predict(batch)
+        else:
+            batch_outputs = model.predict(batch)[-1]
     
     # TensorFlow
     elif framework in ['tensorflow', 'tf']:
         output_tensor = model.graph.get_tensor_by_name('import/upscaled_confs/BiasAdd:0')
-        batch_outputs = model.run(output_tensor, {'import/input_res1:0': batch})
+        if lite:
+            batch_outputs = model.run(output_tensor, {'import/input_1_0:0': batch})            
+        else:
+            batch_outputs = model.run(output_tensor, {'import/input_res1:0': batch})
     
     # TensorFlow Lite
     elif framework in ['tensorflowlite', 'tflite']:
@@ -105,17 +119,19 @@ def infer(batch, model, framework):
         
     return batch_outputs
 
-def analyze_camera(model, framework, resolution):
+def analyze_camera(model, framework, resolution, lite):
     """
     Live prediction of pose coordinates from camera.
     
     Args:
         model: deep learning model
-            Initialized EfficientPose model to utilize (RT, I, II, III or IV)
+            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
         framework: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         resolution: int
             Input height and width of model to utilize
+        lite: boolean
+            Defines if EfficientPose Lite model is used
             
     Returns:
         Predicted pose coordinates in all frames of camera session.
@@ -138,10 +154,10 @@ def analyze_camera(model, framework, resolution):
         batch = [frame[...,::-1]]
         
         # Preprocess batch
-        batch = helpers.preprocess(batch, resolution)
+        batch = helpers.preprocess(batch, resolution, lite)
 
         # Perform inference
-        batch_outputs = infer(batch, model, framework)
+        batch_outputs = infer(batch, model, lite, framework)
 
         # Extract coordinates for frame
         frame_coordinates = helpers.extract_coordinates(batch_outputs[0,...], frame_height, frame_width, real_time=True)
@@ -162,7 +178,7 @@ def analyze_camera(model, framework, resolution):
     
     return coordinates
 
-def analyze_image(file_path, model, framework, resolution):
+def analyze_image(file_path, model, framework, resolution, lite):
     """
     Predict pose coordinates on supplied image.
     
@@ -170,11 +186,13 @@ def analyze_image(file_path, model, framework, resolution):
         file_path: path
             System path of image to analyze
         model: deep learning model
-            Initialized EfficientPose model to utilize (RT, I, II, III or IV)
+            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
         framework: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         resolution: int
             Input height and width of model to utilize
+        lite: boolean
+            Defines if EfficientPose Lite model is used
             
     Returns:
         Predicted pose coordinates in the supplied image.
@@ -188,10 +206,10 @@ def analyze_image(file_path, model, framework, resolution):
     batch = np.expand_dims(image, axis=0)
 
     # Preprocess batch
-    batch = helpers.preprocess(batch, resolution)
+    batch = helpers.preprocess(batch, resolution, lite)
     
     # Perform inference
-    batch_outputs = infer(batch, model, framework)
+    batch_outputs = infer(batch, model, lite, framework)
 
     # Extract coordinates
     coordinates = [helpers.extract_coordinates(batch_outputs[0,...], image_height, image_width)]
@@ -203,7 +221,7 @@ def analyze_image(file_path, model, framework, resolution):
     
     return coordinates
     
-def analyze_video(file_path, model, framework, resolution):
+def analyze_video(file_path, model, framework, resolution, lite):
     """
     Predict pose coordinates on supplied video.
     
@@ -211,11 +229,13 @@ def analyze_video(file_path, model, framework, resolution):
         file_path: path
             System path of video to analyze
         model: deep learning model
-            Initialized EfficientPose model to utilize (RT, I, II, III or IV)
+            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
         framework: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         resolution: int
             Input height and width of model to utilize
+        lite: boolean
+            Defines if EfficientPose Lite model is used
             
     Returns:
         Predicted pose coordinates in all frames of the supplied video.
@@ -255,10 +275,10 @@ def analyze_video(file_path, model, framework, resolution):
             batch = [frame if type(frame) == np.ndarray else np.zeros((frame_height, frame_width, 3)) for frame in batch]
 
          # Preprocess batch
-        batch = helpers.preprocess(batch, resolution)
+        batch = helpers.preprocess(batch, resolution, lite)
 
         # Perform inference
-        batch_outputs = infer(batch, model, framework)
+        batch_outputs = infer(batch, model, lite, framework)
 
         # Extract coordinates for batch
         batch_coordinates = [helpers.extract_coordinates(batch_outputs[n,...], frame_height, frame_width) for n in range(batch_size)]
@@ -276,7 +296,7 @@ def analyze_video(file_path, model, framework, resolution):
     
     return coordinates[:num_video_frames]
 
-def analyze(video, file_path, model, framework, resolution):
+def analyze(video, file_path, model, framework, resolution, lite):
     """
     Analyzes supplied camera/video/image.
     
@@ -286,11 +306,13 @@ def analyze(video, file_path, model, framework, resolution):
         file_path: path
             System path of video/image to analyze, None for camera
         model: deep learning model
-            Initialized EfficientPose model to utilize (RT, I, II, III or IV)
+            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
         framework: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         resolution: int
             Input height and width of model to utilize
+        lite: boolean
+            Defines if EfficientPose Lite model is used
             
     Returns: 
         Predicted pose coordinates in supplied video/image.
@@ -298,15 +320,15 @@ def analyze(video, file_path, model, framework, resolution):
     
     # Camera-based analysis
     if file_path is None:
-        coordinates = analyze_camera(model, framework, resolution)
+        coordinates = analyze_camera(model, framework, resolution, lite)
     
     # Video analysis
     elif video:
-        coordinates = analyze_video(file_path, model, framework, resolution)
+        coordinates = analyze_video(file_path, model, framework, resolution, lite)
     
     # Image analysis
     else:
-        coordinates = analyze_image(file_path, model, framework, resolution)
+        coordinates = analyze_image(file_path, model, framework, resolution, lite)
     
     return coordinates
 
@@ -441,7 +463,7 @@ def perform_tracking(video, file_path, model_name, framework_name, visualize, st
         file_path: path
             System path of video/image to analyze, None if camera
         model_name: string
-            EfficientPose model to utilize (RT, I, II, III or IV)
+            EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
         framework_name: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         visualize: boolean
@@ -461,19 +483,22 @@ def perform_tracking(video, file_path, model_name, framework_name, visualize, st
         print('Desired framework "{0}" not available. Please select among "tflite", "tensorflow", "keras" or "pytorch".'.format(framework_name))
         print('##########################################################################################################\n')
         return False
-    elif model_variant not in ['efficientposert', 'rt', 'efficientposei', 'i', 'efficientposeii', 'ii', 'efficientposeiii', 'iii', 'efficientposeiv', 'iv']:
+    elif model_variant not in ['efficientposert', 'rt', 'efficientposei', 'i', 'efficientposeii', 'ii', 'efficientposeiii', 'iii', 'efficientposeiv', 'iv', 'efficientposertlite', 'rtlite', 'efficientposeilite', 'ilite', 'efficientposeiilite', 'iilite']:
         print('\n##########################################################################################################')
-        print('Desired model "{0}" not available. Please select among "RT", "I", "II", "III" or "IV".'.format(model_name))
+        print('Desired model "{0}" not available. Please select among "RT", "I", "II", "III", "IV", "RTLite", "ILite" or "IILite".'.format(model_name))
         print('##########################################################################################################\n')
         return False
         
     # LOAD MODEL
     else:
-        model_variant = model_variant[13:] if len(model_variant) > 3 else model_variant 
+        model_variant = model_variant[13:] if len(model_variant) > 6 else model_variant 
+        lite = True if model_variant.endswith('lite') else False
         model, resolution = get_model(framework, model_variant)
+        if not model:
+            return True
         
     # PERFORM INFERENCE
-    coordinates = analyze(video, file_path, model, framework, resolution)
+    coordinates = analyze(video, file_path, model, framework, resolution, lite)
         
     # VISUALIZE PREDICTIONS
     if visualize and file_path is not None and coordinates:
@@ -493,7 +518,7 @@ def main(file_path, model_name, framework_name, visualize, store):
         file_path: path/string
             System path of video/image to analyze, None to perform live tracking
         model_name: string
-            EfficientPose model to utilize (RT, I, II, III or IV)
+            EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
         framework_name: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         visualize: boolean
@@ -540,7 +565,7 @@ if __name__== '__main__':
     
     # Define default choices
     file_path = None
-    model_name = 'I'
+    model_name = 'ILite'
     framework_name = 'TFLite'
     visualize = False
     store = False
