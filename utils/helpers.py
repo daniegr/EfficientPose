@@ -220,7 +220,7 @@ def pad(source_array, target_height, target_width):
     
     return target_array
     
-def preprocess(batch, resolution):
+def preprocess(batch, resolution, lite=False):
     """
     Preprocess Numpy array according to model preferences.
     
@@ -229,6 +229,8 @@ def preprocess(batch, resolution):
             Numpy array of shape (n, h, w, 3)
         resolution: int
             Input height and width of model to utilize
+        lite: boolean
+            Defines if EfficientPose Lite model is used
     
     Returns:
         Preprocessed Numpy array of shape (n, resolution, resolution, 3).
@@ -247,7 +249,10 @@ def preprocess(batch, resolution):
     batch = np.asarray(batch)
 
     # Preprocess images in batch
-    batch = efficientnet_preprocess_input(batch, mode='torch')
+    if lite:
+        batch = efficientnet_preprocess_input(batch, mode='tf')
+    else:
+        batch = efficientnet_preprocess_input(batch, mode='torch')
     
     return batch
     
