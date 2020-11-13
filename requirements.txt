@@ -5,3 +5,4 @@ scikit-image==0.16.2
 opencv-python==3.3.1.11
 sk-video==1.1.10
 torch==1.4.0
+h5py==2.10.0
