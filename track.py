@@ -15,7 +15,7 @@ def get_model(framework, model_variant):
         framework: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         model_variant: string
-            EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
+            EfficientPose model to utilize (RT, I, II, III, IV, RT_Lite, I_Lite or II_Lite)
             
     Returns:
         Initialized EfficientPose model and corresponding resolution.
@@ -64,7 +64,7 @@ def get_model(framework, model_variant):
         qconfig = quantization.get_default_qconfig('qnnpack')
         backends.quantized.engine = 'qnnpack'
             
-    return model, {'rt': 224, 'i': 256, 'ii': 368, 'iii': 480, 'iv': 600, 'rtlite': 224, 'ilite': 256, 'iilite': 368}[model_variant]
+    return model, {'rt': 224, 'i': 256, 'ii': 368, 'iii': 480, 'iv': 600, 'rt_lite': 224, 'i_lite': 256, 'ii_lite': 368}[model_variant]
 
 def infer(batch, model, lite, framework):
     """
@@ -74,7 +74,7 @@ def infer(batch, model, lite, framework):
         batch: ndarray
             Stack of preprocessed images
         model: deep learning model
-            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
+            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RT_Lite, I_Lite or II_Lite)
         lite: boolean
             Defines if EfficientPose Lite model is used
         framework: string
@@ -125,7 +125,7 @@ def analyze_camera(model, framework, resolution, lite):
     
     Args:
         model: deep learning model
-            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
+            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RT_Lite, I_Lite or II_Lite)
         framework: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         resolution: int
@@ -186,7 +186,7 @@ def analyze_image(file_path, model, framework, resolution, lite):
         file_path: path
             System path of image to analyze
         model: deep learning model
-            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
+            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RT_Lite, I_Lite or II_Lite)
         framework: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         resolution: int
@@ -229,7 +229,7 @@ def analyze_video(file_path, model, framework, resolution, lite):
         file_path: path
             System path of video to analyze
         model: deep learning model
-            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
+            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RT_Lite, I_Lite or II_Lite)
         framework: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         resolution: int
@@ -306,7 +306,7 @@ def analyze(video, file_path, model, framework, resolution, lite):
         file_path: path
             System path of video/image to analyze, None for camera
         model: deep learning model
-            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
+            Initialized EfficientPose model to utilize (RT, I, II, III, IV, RT_Lite, I_Lite or II_Lite)
         framework: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         resolution: int
@@ -463,7 +463,7 @@ def perform_tracking(video, file_path, model_name, framework_name, visualize, st
         file_path: path
             System path of video/image to analyze, None if camera
         model_name: string
-            EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
+            EfficientPose model to utilize (RT, I, II, III, IV, RT_Lite, I_Lite or II_Lite)
         framework_name: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         visualize: boolean
@@ -483,16 +483,16 @@ def perform_tracking(video, file_path, model_name, framework_name, visualize, st
         print('Desired framework "{0}" not available. Please select among "tflite", "tensorflow", "keras" or "pytorch".'.format(framework_name))
         print('##########################################################################################################\n')
         return False
-    elif model_variant not in ['efficientposert', 'rt', 'efficientposei', 'i', 'efficientposeii', 'ii', 'efficientposeiii', 'iii', 'efficientposeiv', 'iv', 'efficientposertlite', 'rtlite', 'efficientposeilite', 'ilite', 'efficientposeiilite', 'iilite']:
+    elif model_variant not in ['efficientposert', 'rt', 'efficientposei', 'i', 'efficientposeii', 'ii', 'efficientposeiii', 'iii', 'efficientposeiv', 'iv', 'efficientposert_lite', 'rt_lite', 'efficientposei_lite', 'i_lite', 'efficientposeii_lite', 'ii_lite']:
         print('\n##########################################################################################################')
-        print('Desired model "{0}" not available. Please select among "RT", "I", "II", "III", "IV", "RTLite", "ILite" or "IILite".'.format(model_name))
+        print('Desired model "{0}" not available. Please select among "RT", "I", "II", "III", "IV", "RT_Lite", "I_Lite" or "II_Lite".'.format(model_name))
         print('##########################################################################################################\n')
         return False
         
     # LOAD MODEL
     else:
-        model_variant = model_variant[13:] if len(model_variant) > 6 else model_variant 
-        lite = True if model_variant.endswith('lite') else False
+        model_variant = model_variant[13:] if len(model_variant) > 7 else model_variant 
+        lite = True if model_variant.endswith('_lite') else False
         model, resolution = get_model(framework, model_variant)
         if not model:
             return True
@@ -518,7 +518,7 @@ def main(file_path, model_name, framework_name, visualize, store):
         file_path: path/string
             System path of video/image to analyze, None to perform live tracking
         model_name: string
-            EfficientPose model to utilize (RT, I, II, III, IV, RTLite, ILite or IILite)
+            EfficientPose model to utilize (RT, I, II, III, IV, RT_Lite, I_Lite or II_Lite)
         framework_name: string
             Deep learning framework to use (Keras, TensorFlow, TensorFlow Lite or PyTorch)
         visualize: boolean
@@ -565,7 +565,7 @@ if __name__== '__main__':
     
     # Define default choices
     file_path = None
-    model_name = 'ILite'
+    model_name = 'I_Lite'
     framework_name = 'TFLite'
     visualize = False
     store = False
