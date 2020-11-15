@@ -26,7 +26,7 @@ Did I forget to mention flexibility? Indeed there is!
 You are provided with these options (which go seamlessly hand in hand):
 - **Path (*--path*, *-p*)**: Tell the program which file (i.e., video or image) you want to analyze. Ignore this option for camera-based tracking. For ex: ```python track.py --path=utils/MPII.jpg```
 
-- **Model (*--model*, *-m*)**: Explore choice of model (EfficientPose RT - IV or EfficientPose RT Lite - II Lite) depending on your computational resources and precision requirements. For more details, we refer to the [performance comparison](#evidence). For ex: ```python track.py --model=IILite```
+- **Model (*--model*, *-m*)**: Explore choice of model (EfficientPose RT - IV or EfficientPose RT Lite - II Lite) depending on your computational resources and precision requirements. For more details, we refer to the [performance comparison](#evidence). For ex: ```python track.py --model=II_Lite```
 
 - **Framework (*--framework*, *-f*)**: Have specific preference of deep learning framework? We provide models in [Keras](https://keras.io/), [TensorFlow](https://www.tensorflow.org/), [TFLite](https://www.tensorflow.org/lite) and [PyTorch](https://pytorch.org/). In general, TensorFlow is recommended for maximal precision with low computational overhead on GPU, while TFLite (and PyTorch in case of ARM CPUs with [QNNPACK](https://engineering.fb.com/ml-applications/qnnpack/)) supports use in resource-constrained applications, such as smartphones. For ex: ```python track.py --framework=tensorflow```
 
