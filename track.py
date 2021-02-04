@@ -256,7 +256,7 @@ def analyze_video(file_path, model, framework, resolution, lite):
         frame_height, frame_width = next(vreader(file_path)).shape[:2]
     except:
         print('\n##########################################################################################################')
-        print('Video "{0}" could not be loaded. Please verify that the file is working.'.format(video_path))
+        print('Video "{0}" could not be loaded. Please verify that the file is working.'.format(file_path))
         print('##########################################################################################################\n')
         return False
     
