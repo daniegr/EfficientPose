@@ -76,3 +76,8 @@ If you enjoyed this project or found the work helpful in your research, please c
   year={2020}
 }
 ```
+
+## Relevant resources
+
+- Model quantization (OpenVINO, TFLite, TensorFlow.js, TensorRT, Core ML, and ONNX): [EfficientPose in PINTO_model_zoo](https://github.com/PINTO0309/PINTO_model_zoo/tree/main/084_EfficientPose)
+- TensorFlow.js implementation: [EfficientPose for TFJS](https://github.com/vladmandic/efficientpose)
