@@ -93,11 +93,11 @@ def infer(batch, model, lite, framework):
     
     # TensorFlow
     elif framework in ['tensorflow', 'tf']:
-        output_tensor = model.graph.get_tensor_by_name('import/upscaled_confs/BiasAdd:0')
+        output_tensor = model.graph.get_tensor_by_name('upscaled_confs/BiasAdd:0')
         if lite:
-            batch_outputs = model.run(output_tensor, {'import/input_1_0:0': batch})            
+            batch_outputs = model.run(output_tensor, {'input_1_0:0': batch})            
         else:
-            batch_outputs = model.run(output_tensor, {'import/input_res1:0': batch})
+            batch_outputs = model.run(output_tensor, {'input_res1:0': batch})
     
     # TensorFlow Lite
     elif framework in ['tensorflowlite', 'tflite']:
