@@ -77,6 +77,12 @@ If you enjoyed this project or found the work helpful in your research, please c
 }
 ```
 
+## Main updates
+
+- April 2021: Provided support for TensorFlow 2
+- November 2020: Launched EfficientPose Lite models in Keras, TensorFlow and TFLite
+- April 2020: Launched EfficientPose models in Keras, TensorFlow, TFLite and PyTorch
+
 ## Relevant resources
 
 - Model quantization (OpenVINO, TFLite, TensorFlow.js, TensorRT, Core ML, and ONNX): [EfficientPose in PINTO_model_zoo](https://github.com/PINTO0309/PINTO_model_zoo/tree/main/084_EfficientPose)
