@@ -69,11 +69,15 @@ The work is conducted as a collaboration between the [Department of Neuromedicin
 
 If you enjoyed this project or found the work helpful in your research, please cite the following:
 ```
-@article{groos2020efficientpose,
+@article{groos2021efficientpose,
   title={EfficientPose: Scalable single-person pose estimation},
-  author={Groos, Daniel and Ramampiaro, Heri and Ihlen, Espen},
-  journal={Applied intelligence},
-  year={2020}
+  author={Groos, Daniel and Ramampiaro, Heri and Ihlen, Espen AF},
+  journal={Applied Intelligence},
+  volume={51},
+  number={4},
+  pages={2518--2533},
+  year={2021},
+  publisher={Springer}
 }
 ```
 
