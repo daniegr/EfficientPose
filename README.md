@@ -58,7 +58,7 @@ You are provided with these options (which go seamlessly hand in hand):
 
 To achieve the optimal precision provided by the software, please adhere to the following three principles:
 1. *Ensure there is only one person present in the image/video*
-2. *Ensure that the full body of the person is clearly visible, and near the centre of the image/video frame*
+2. *Ensure that the full body of the person is clearly visible, is near the centre of the image/video frame, and is occupying a sufficient portion of the camera view (portrait mode is recommended when feasible)*
 3. *Avoid that the subject is occluded by other objects, even partial occlusion is discouraged*
 
 ## Acknowledgment
