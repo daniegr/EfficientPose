@@ -3,4 +3,4 @@ pymediainfo==5.0.3
 torch==1.8.1
 scikit-image==0.17.2
 sk-video==1.1.10
-opencv-python==3.3.1.11
+opencv-python==3.4.7.28
