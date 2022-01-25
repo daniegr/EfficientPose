@@ -45,7 +45,7 @@ You are provided with these options (which go seamlessly hand in hand):
 | EfficientPose II Lite<sup>*</sup> | 368x368 | 1.46M | 7.25G | 87.1 | 30.8 | - | - |
 | EfficientPose II | 368x368 | 1.73M | 7.70G | 88.2 | 30.2 | - | - |
 | EfficientPose III | 480x480 | 3.23M | 23.35G | 89.5 | 30.9 | - | -  |
-| EfficientPose IV | 600x600 | 6.56M | 72.89G | **89.8** | **35.6** | **91.2** | **34.0** |
+| EfficientPose IV | 600x600 | 6.56M | 72.89G | **89.8** | **35.6** | **91.2** | **36.0** |
 | OpenPose [(Cao et al.)](https://arxiv.org/abs/1812.08008) | 368x368 | 25.94M | 160.36G | 87.6 | 22.8 | 88.8 | 22.5 |
 
 <sup>*</sup>EfficientPose Lite models modify the original EfficientPose architecture to target deployment on edge devices through low latency inference. In particular, the EfficientNet backbones are replaced by EfficientNet Lite models of similar scaling, parallel feature extraction and cross-resolution features are omitted, squeeze-and-excitation modules are removed, and E-swish activations are replaced by ReLU6.
