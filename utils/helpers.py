@@ -7,7 +7,6 @@ from torch import Tensor
 import numpy as np
 import math
 from skimage.transform import rescale
-from skimage.util import pad as padding
 from scipy.ndimage.filters import gaussian_filter
 
 class Swish(Activation):
@@ -216,7 +215,7 @@ def pad(source_array, target_height, target_width):
         paddings.append([0,0])
         
     # Perform padding
-    target_array = padding(source_array, paddings, 'constant')
+    target_array = np.pad(source_array, paddings, 'constant')
     
     return target_array
     
