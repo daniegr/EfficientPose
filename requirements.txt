@@ -1,4 +1,4 @@
-tensorflow==2.9.1
+tensorflow==2.9.3
 pymediainfo==5.1.0
 torch==1.12.0
 scikit-image==0.19.3
